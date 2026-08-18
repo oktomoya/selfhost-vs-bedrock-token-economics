@@ -165,6 +165,7 @@ SERIES_KEY = [
 ]
 
 INPUT_KEY = [
+    (1000, "line-dashdot", "1K"),
     (5000, "line-solid", "5K"),
     (10000, "line-dashed", "10K"),
     (50000, "line-dotted", "50K"),
@@ -196,7 +197,8 @@ def render_chart_controls(suffix, ymax_id, ymax_opts, primary):
                 ("SP1AU", "SP 1-year All Upfront", True),
                 ("SP3NU", "SP 3-year No Upfront", False),
                 ("SP3AU", "SP 3-year All Upfront", False)]
-    outputs = [("500", "500", False), ("1000", "1,000", True), ("2000", "2,000", False)]
+    outputs = [("100", "100", False), ("500", "500", False),
+               ("1000", "1,000", True), ("2000", "2,000", False)]
     buffers = [("1", "1x (no buffer)", False), ("5", "5x", True), ("10", "10x", False)]
 
     ser_cls = ' class="ser-cb"' if primary else ""
@@ -287,6 +289,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   .line-solid { border-top-style: solid; }
   .line-dashed { border-top-style: dashed; }
   .line-dotted { border-top-style: dotted; border-top-width: 4px; }
+  .line-dashdot { border-top-style: dashed; border-top-width: 2px; }
   .overview { border: 1px solid #d7dce2; border-left: 4px solid #0072B2;
               border-radius: 6px; padding: 4px 20px 12px; margin: 16px 0;
               background: #fbfcfd; font-size: 13px; line-height: 1.7; }
@@ -354,13 +357,16 @@ instance can actually handle. This means the break-even numbers assume latency s
 
 <h3>4. What we measured</h3>
 <ul>
-  <li><b>Input tokens</b>: 5,000 / 10,000 / 50,000 (shown as line style in the charts)</li>
-  <li><b>Output tokens</b>: 500 / 1,000 / 2,000 (dropdown)</li>
+  <li><b>Input tokens</b>: 1,000 / 5,000 / 10,000 / 50,000 (shown as line style in the charts)</li>
+  <li><b>Output tokens</b>: 100 / 500 / 1,000 / 2,000 (dropdown)</li>
   <li><b>Cache ratio</b>: 10% / 50% / 80%, set as the shared-prefix fraction. This stands for how
       much of the prompt (such as a system prompt) is reused. The charts are split by this.</li>
   <li><b>Instances</b>: p5.4xlarge / g7e.2xlarge / g7.2xlarge, same test on each</li>
 </ul>
-<p>That is 27 shapes per instance type (3 inputs × 3 outputs × 3 cache ratios).</p>
+<p>That is 48 shapes per instance type (4 inputs × 4 outputs × 3 cache ratios). The
+1,000-token input and 100-token output rows were added after the first run to
+cover a light per-request front stage; they sit below the original 5,000-token
+input and 500-token output floors.</p>
 
 <h3>5. How we turn throughput into cost</h3>
 <div class="formula">Self-hosted per month = ceil(required TPM ÷ (stable tokens/s × 60)) × EC2 hourly rate × 730h</div>
@@ -419,7 +425,7 @@ stable operating point on that instance type.</div>
 sustained). Y axis = cost per month (USD, 730 hours). Bedrock is a straight line because it is
 charged per token. EC2 is a step line: instances needed (demand ÷ what one instance handles,
 rounded up) × hourly rate.
-Input token counts 5,000 / 10,000 / 50,000 are drawn in the same chart, and the charts are
+Input token counts 1,000 / 5,000 / 10,000 / 50,000 are drawn in the same chart, and the charts are
 split by cache ratio 10% / 50% / 80%. Output tokens are set with the dropdown.
 The EC2 capacity buffer multiplies how much capacity you provision, so 5x means you run enough
 instances for 5 times the demand. It only affects EC2, since Bedrock is charged per token and
@@ -549,6 +555,7 @@ const SERVICE_COLORS = {
   "GPT-5.6 Luna": "#E69F00",
 };
 const INPUT_LINE_STYLES = {
+  1000: {dash: [10, 3, 2, 3], width: 2.0},
   5000: {dash: [], width: 2.2},
   10000: {dash: [9, 5], width: 2.6},
   50000: {dash: [2, 4], width: 3.2},
@@ -828,7 +835,7 @@ function saturationChart(canvasId, shapes) {
 }
 
 for (const src of PAYLOAD) {
-  // 3x3 grid of curves (in x out)
+  // grid of curves (in x out), derived from the data present
   const inputs = [...new Set(src.shapes.map(s => s.inp))].sort((a,b)=>a-b);
   const outputs = [...new Set(src.shapes.map(s => s.out))].sort((a,b)=>a-b);
   for (const inp of inputs) {

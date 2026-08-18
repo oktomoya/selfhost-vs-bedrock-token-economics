@@ -50,12 +50,12 @@ shape, and it feeds the cost calculation.
 Measurement tool: `vllm bench serve` (bundled with vLLM), random dataset,
 Poisson arrivals.
 
-### 3.2 Shape grid (27 shapes)
+### 3.2 Shape grid (48 shapes)
 
 | Axis | Values |
 |---|---|
-| Input tokens | 5,000 / 10,000 / 50,000 |
-| Output tokens | 500 / 1,000 / 2,000 |
+| Input tokens | 1,000 / 5,000 / 10,000 / 50,000 |
+| Output tokens | 100 / 500 / 1,000 / 2,000 |
 | Cache ratio | 10% / 50% / 80% |
 
 Cache ratio = the share of the input that is a prefix common to every request.
