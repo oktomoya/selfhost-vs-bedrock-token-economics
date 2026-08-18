@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Driver and agent logs.
+# These are execution transcripts, not results. They contain instance ids,
+# AWS profile names and local paths, so they are deliberately not published.
+bench_agent*.log
+bench_p5.log
+bench_g7.log
+bench_g7e.log
+*/progress.log
+*/run_bench.out
+
+# Local editor / OS noise
+.DS_Store
+.idea/
+.vscode/
