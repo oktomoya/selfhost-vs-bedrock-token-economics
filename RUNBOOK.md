@@ -27,7 +27,7 @@ Set these environment variables before running; nothing is hardcoded:
 
 ## What the test does
 
-For each of config.SHAPES (27 shapes), sweep config.REQUEST_RATES
+For each of config.SHAPES (48 shapes), sweep config.REQUEST_RATES
 ([0.1, 0.5, 1, 2, 5, 10, 20, 50, 100] rps) in ascending order.
 
 1. Run `vllm bench serve` for each shape x rate:
@@ -72,7 +72,7 @@ For each of config.SHAPES (27 shapes), sweep config.REQUEST_RATES
 
 ## Completion criteria and deliverables
 
-- All 27 shapes measured up to their saturation point (or a recorded reason for
+- All 48 shapes measured up to their saturation point (or a recorded reason for
   stopping)
 - `results/*.json` — measurements per shape x rate
 - `results/summary.json` — saturation summary per shape

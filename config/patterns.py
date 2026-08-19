@@ -8,14 +8,22 @@ Method:
   that shape, and it is the input to the cost calculation.
 
 Three-axis shape grid:
-  - Input tokens:   5,000 / 10,000 / 50,000
-  - Output tokens:  500 / 1,000 / 2,000
+  - Input tokens:   1,000 / 5,000 / 10,000 / 50,000
+  - Output tokens:  100 / 500 / 1,000 / 2,000
   - Cache ratio:    10% / 50% / 80%
     (the share of the input that is a prefix common to every request,
      implemented with --random-prefix-len of vllm bench serve:
      prefix = input * ratio, random part = input - prefix)
 
-Grid = 3 x 3 x 3 = 27 shapes.
+Grid = 4 x 4 x 3 = 48 shapes.
+
+The 1,000-input and 100-output rows were added after the original 27-shape
+(3 x 3 x 3) run. A per-request "front stage" that classifies intent and extracts
+tool arguments in one shot runs around 700-1,000 input tokens and emits on the
+order of tens of output tokens, both below the original floors (5,000 input /
+500 output). The original grid could therefore only bound its throughput from
+below; in=1,000 / out=100 brackets that shape directly. Output is decode-bound,
+so out=100 vs out=500 moves throughput substantially for light inputs.
 
 Request rate sweep:
   Run REQUEST_RATES in ascending order (Poisson arrivals). At each rate, if
@@ -38,8 +46,8 @@ Matching vllm bench serve arguments:
   --num-prompts <num_prompts>
 """
 
-INPUT_TOKENS = [5_000, 10_000, 50_000]
-OUTPUT_TOKENS = [500, 1_000, 2_000]
+INPUT_TOKENS = [1_000, 5_000, 10_000, 50_000]
+OUTPUT_TOKENS = [100, 500, 1_000, 2_000]
 CACHE_RATIOS = [0.10, 0.50, 0.80]
 
 # Request rate sweep (rps, run ascending and cut off once saturated)

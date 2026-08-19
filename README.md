@@ -41,13 +41,21 @@ to use in production, so it would overstate what an instance can really do.
 
 ### Grid
 
-27 shapes per instance type (3 × 3 × 3):
+48 shapes per instance type (4 × 4 × 3):
 
 | Axis | Values |
 |---|---|
-| Input tokens | 5,000 / 10,000 / 50,000 |
-| Output tokens | 500 / 1,000 / 2,000 |
+| Input tokens | 1,000 / 5,000 / 10,000 / 50,000 |
+| Output tokens | 100 / 500 / 1,000 / 2,000 |
 | Cache ratio | 10% / 50% / 80% |
+
+The 1,000-token input and 100-token output rows were added after the first
+27-shape (3 × 3 × 3) run. A per-request front stage (one-shot intent
+classification and tool-argument extraction) runs around 700-1,000 input tokens
+and emits on the order of tens of output tokens, both below the original floors
+(5,000 input / 500 output), so the first grid could only bound its throughput
+from below. The in=1,000 / out=100 cells bracket that shape directly. Output is
+decode-bound, so out=100 versus out=500 moves throughput a lot for light inputs.
 
 Cache ratio is the fraction of the input that is a prefix shared by every
 request, supplied via `--random-prefix-len`. It stands in for how much of a
@@ -175,7 +183,7 @@ Converted to cost for the same shape, at SP 1-year All Upfront:
 | GPT-5.6 Luna | 0.230 |
 | Claude Haiku 4.5 | 0.955 |
 
-These are single cells from a 27-shape grid and they move a lot with the shape.
+These are single cells from the grid and they move a lot with the shape.
 Read the report rather than generalising from them.
 
 ## Repository layout
