@@ -17,7 +17,7 @@ import run_bench as rb
 
 # g7e-specific overrides (RUNBOOK_g7e.md)
 rb.REGION = os.environ.get("BENCH_REGION_G7E", "us-east-2")
-rb.INSTANCE_ID = os.environ.get("BENCH_INSTANCE_ID_G7E", "")
+rb.INSTANCE_ID = os.environ.get("BENCH_INSTANCE_ID_G7E", "i-013d77697fb4d674f")
 rb.LOCAL_RESULTS = Path(__file__).parent / "results_g7e"
 rb.PROGRESS_LOG = rb.LOCAL_RESULTS / "progress.log"
 
