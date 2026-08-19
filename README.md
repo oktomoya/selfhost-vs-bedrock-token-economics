@@ -65,9 +65,9 @@ prompt (a system prompt, for instance) gets reused and hits the prefix cache.
 
 | Instance | GPU | Shapes | Measurements |
 |---|---|---|---|
-| p5.4xlarge | NVIDIA H100 80GB x1 | 27 | 127 |
-| g7e.2xlarge | NVIDIA RTX PRO 6000 Server 96GB x1 | 27 | 96 |
-| g7.2xlarge | NVIDIA RTX PRO 4500 32GB x1 | 27 | 58 |
+| p5.4xlarge | NVIDIA H100 80GB x1 | 48 | 269 |
+| g7e.2xlarge | NVIDIA RTX PRO 6000 Server 96GB x1 | 48 | 213 |
+| g7.2xlarge | NVIDIA RTX PRO 4500 32GB x1 | 48 | 145 |
 
 Model: `Qwen/Qwen3.5-4B`, text-only (`--language-model-only`), prefix caching
 enabled. Measurement counts differ because a faster instance sustains more rate
